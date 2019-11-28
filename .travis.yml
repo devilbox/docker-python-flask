@@ -1,0 +1,69 @@
+---
+
+###
+### Travis settings
+###
+sudo: required
+language: minimal
+services:
+  - docker
+
+
+###
+### Build Matrix
+###
+env:
+  matrix:
+    - PYTHON=3.8
+    - PYTHON=3.7
+    - PYTHON=3.6
+    - PYTHON=3.5
+    - PYTHON=2.7
+
+
+###
+### Install requirements
+###
+install:
+  - docker version
+  - netstat -tulpn
+
+  - retry() {
+      for ((n=0; n<10; n++)); do
+        echo "[${n}] ${*}";
+        if eval "${*}"; then
+          return 0;
+        fi;
+        sleep 1;
+      done;
+      return 1;
+    }
+
+
+###
+### Check generation changes, build and test
+###
+before_script:
+  - retry make build PYTHON=${PYTHON}
+  - retry make test  PYTHON=${PYTHON}
+
+
+###
+### Push to Dockerhub
+###
+script:
+  # Push to docker hub on success
+  - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
+      retry make login USER="${DOCKER_USERNAME}" PASS="${DOCKER_PASSWORD}";
+      if [ -n "${TRAVIS_TAG}" ]; then
+        retry make push TAG="${PYTHON}-dev-${TRAVIS_TAG}";
+      elif [ "${TRAVIS_BRANCH}" == "master" ]; then
+        retry make push TAG="${PYTHON}-dev";
+      elif [[ ${TRAVIS_BRANCH} =~ ^(release-[.0-9]+.*)$ ]]; then
+        retry make push TAG="${PYTHON}-dev-${TRAVIS_BRANCH}";
+      else
+        echo "Skipping branch ${TRAVIS_BRANCH}";
+      fi
+    else
+      echo "Skipping push on PR";
+    fi

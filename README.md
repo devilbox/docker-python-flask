@@ -1,6 +1,6 @@
 # Python Flask Docker image
 
-[![Build Status](https://travis-ci.org/devilbox/docker-python-flask.svg?branch=master)](https://travis-ci.org/devilbox/docker-python-flask)
+[![Build Status](https://travis-ci.com/devilbox/docker-python-flask.svg?branch=master)](https://travis-ci.com/devilbox/docker-python-flask)
 [![Tag](https://img.shields.io/github/tag/devilbox/docker-python-flask.svg)](https://github.com/devilbox/docker-python-flask/releases)
 [![Gitter](https://badges.gitter.im/devilbox/Lobby.svg)](https://gitter.im/devilbox/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Discourse](https://img.shields.io/discourse/https/devilbox.discourse.group/status.svg?colorB=%234CB697)](https://devilbox.discourse.group)

@@ -1,0 +1,24 @@
+---
+version: '3.4'
+
+services:
+  project1:
+    image: devilbox/python-flask:${PYTHON_VERSION:-3.8}-dev
+    build:
+      context: .
+      target: dev
+      args:
+        - ALPINE=
+        - PYTHON=${PYTHON_VERSION:-3.8}
+    hostname: project1
+    restart: always
+    ports:
+      - "${HOST_PORT_FLASK:-3000}:${FLASK_PORT:-3000}"
+    environment:
+      - FLASK_PORT=${FLASK_PORT:-3000}
+      - FLASK_APP=${FLASK_APP:-main.py}
+      - FLASK_PROJECT=${FLASK_PROJECT:-test-project}
+      - NEW_GID=${NEW_UID:-1000}
+      - NEW_UID=${NEW_UID:-1000}
+    volumes:
+      - ./test-project:/shared/httpd/${FLASK_PROJECT:-test-project}
