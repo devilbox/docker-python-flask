@@ -1,0 +1,4 @@
+*.pyc
+.env
+/test-project/venv
+/test-project/app/__pycache__
