@@ -45,18 +45,15 @@ COPY --from=builder-dev /usr/local/lib/python${PYTHON}/site-packages/ /usr/local
 COPY --from=builder-dev /usr/local/bin/flask /usr/local/bin/flask
 COPY --from=builder-dev /usr/local/bin/virtualenv /usr/local/bin/virtualenv
 
-# Build args
-ARG UID=1000
-ARG GID=1000
-
-# User
+# User and default dir
 RUN set -x \
-	&& addgroup -g ${GID} devilbox \
-	&& adduser -h /home/devilbox -G devilbox -D -u ${UID} devilbox
+	&& addgroup -g 1000 devilbox \
+	&& adduser -h /home/devilbox -G devilbox -D -u 1000 devilbox \
+	&& mkdir -p /shared/httpd \
+	&& chmod 0755 /shared/httpd \
+	&& chown devilbox:devilbox /shared/httpd
 
 # Start script
-ENV NEW_UID=${UID}
-ENV NEW_GID=${GID}
 COPY data/start.sh /start.sh
 
 # Start
