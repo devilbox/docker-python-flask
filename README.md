@@ -9,12 +9,60 @@
 
 This project provides a Python Flask Docker image for development purposes.
 
+View **[Dockerfile](https://github.com/devilbox/docker-python-flask/blob/master/Dockerfile)** on GitHub.
+
+
+| Docker Hub | Upstream Project |
+|------------|------------------|
+| <a href="https://hub.docker.com/r/devilbox/python-flask"><img height="82px" src="http://dockeri.co/image/devilbox/python-flask" /></a> | <a href="https://github.com/cytopia/devilbox" ><img height="82px" src="https://raw.githubusercontent.com/devilbox/artwork/master/submissions_banner/cytopia/01/png/banner_256_trans.png" /></a> |
+
+
+#### Documentation
+
+In case you seek help, go and visit the community pages.
+
+<table width="100%" style="width:100%; display:table;">
+ <thead>
+  <tr>
+   <th width="33%" style="width:33%;"><h3><a target="_blank" href="https://devilbox.readthedocs.io">Documentation</a></h3></th>
+   <th width="33%" style="width:33%;"><h3><a target="_blank" href="https://gitter.im/devilbox/Lobby">Chat</a></h3></th>
+   <th width="33%" style="width:33%;"><h3><a target="_blank" href="https://devilbox.discourse.group">Forum</a></h3></th>
+  </tr>
+ </thead>
+ <tbody style="vertical-align: middle; text-align: center;">
+  <tr>
+   <td>
+    <a target="_blank" href="https://devilbox.readthedocs.io">
+     <img title="Documentation" name="Documentation" src="https://raw.githubusercontent.com/cytopia/icons/master/400x400/readthedocs.png" />
+    </a>
+   </td>
+   <td>
+    <a target="_blank" href="https://gitter.im/devilbox/Lobby">
+     <img title="Chat on Gitter" name="Chat on Gitter" src="https://raw.githubusercontent.com/cytopia/icons/master/400x400/gitter.png" />
+    </a>
+   </td>
+   <td>
+    <a target="_blank" href="https://devilbox.discourse.group">
+     <img title="Devilbox Forums" name="Forum" src="https://raw.githubusercontent.com/cytopia/icons/master/400x400/discourse.png" />
+    </a>
+   </td>
+  </tr>
+  <tr>
+  <td><a target="_blank" href="https://devilbox.readthedocs.io">devilbox.readthedocs.io</a></td>
+  <td><a target="_blank" href="https://gitter.im/devilbox/Lobby">gitter.im/devilbox</a></td>
+  <td><a target="_blank" href="https://devilbox.discourse.group">devilbox.discourse.group</a></td>
+  </tr>
+ </tbody>
+</table>
+
 
 ## Docker image tags
 
 * **Image name:** `devilbox/python-flask`
 
 ### Rolling tags
+
+Rolling tags are updated and pushed nightly to ensure latest patch-level Python version.
 
 | Image tag | Python version |
 |-----------|----------------|
@@ -52,13 +100,14 @@ curl localhost:3000
 
 ## Environment Variables
 
-| Variable        | Required | Description |
-|-----------------|----------|-------------|
-| `FLASK_PROJECT` | Yes      | The directory name in `/shared/httpd/` to serve [1] |
-| `FLASK_APP`     |          | The main entrypoint file name (default is `main.py`) |
-| `FLASK_PORT`    |          | Docker internal port to serve the application (default is `3000`) |
-| `NEW_UID`       |          | User id of the host system to ensure syncronized permissions between host and container |
-| `NEW_GID`       |          | Group id of the host system to ensure syncronized permissions between host and container |
+| Variable         | Required | Default   | Description |
+|------------------|----------|-----------| ------------|
+| `FLASK_PROJECT`  | Yes      |           | The sub-directory name under `/shared/httpd/` to serve [1] |
+| `FLASK_APP_DIR`  |          | `app`     | The main entrypoint dir name |
+| `FLASK_APP_FILE` |          | `main.py` | The main entrypoint file name  |
+| `FLASK_PORT`     |          | `3000`    | Docker container internal http port to serve the application |
+| `NEW_UID`        |          | `1000`    | User id of the host system to ensure syncronized permissions between host and container |
+| `NEW_GID`        |          | `1000`    | Group id of the host system to ensure syncronized permissions between host and container |
 
 * [1] See [Project directory structure](#project-directory-structure) for usage
 
@@ -72,11 +121,12 @@ The following shows how to organize your project on the host operating system.
 The following is the least required directory structure:
 ```bash
 <project-dir>/
-└── app                      # Must be named 'app'
-    └── main.py              # Entrypoint name can be changed via env var [1]
+└── app                      # Entrypoint dir name can be changed via env var [1]
+    └── main.py              # Entrypoint file name can be changed via env var [2]
 ```
 
-* [1] Use the `FLASK_APP` environment variable to defined the file for the entrypoint in `<project-dir>/app/`. Example: `FLASK_APP=test.py`.
+* [1] Use the `FLASK_APP_DIR` environment variable to define the dir for the entrypoint in `<project-dir>/app/`. Example: `FLASK_APP_DIR=src`.
+* [2] Use the `FLASK_APP_FILE` environment variable to define the file for the entrypoint in `<project-dir>/app/main.py`. Example: `FLASK_APP_FILE=test.py`.
 
 
 ### Structure with dependencies
@@ -84,9 +134,9 @@ The following is the least required directory structure:
 The following directory structure allows for auto-installing Python dependencies during startup into a virtual env.
 ```bash
 <project-dir>/
-├── app                      # Must be named 'app'
+├── app                      # Entrypoint dir name can be changed via env var
 │   ├── __init__.py
-│   └── main.py              # Entrypoint name can be changed via env var
+│   └── main.py              # Entrypoint file name can be changed via env var
 └── requirements.txt         # Optional: will pip install in virtual env
 ```
 

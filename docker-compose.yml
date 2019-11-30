@@ -16,9 +16,10 @@ services:
       - "${HOST_PORT_FLASK:-3000}:${FLASK_PORT:-3000}"
     environment:
       - FLASK_PORT=${FLASK_PORT:-3000}
-      - FLASK_APP=${FLASK_APP:-main.py}
+      - FLASK_APP_DIR=${FLASK_APP_DIR:-app}
+      - FLASK_APP_FILE=${FLASK_APP_FILE:-main.py}
       - FLASK_PROJECT=${FLASK_PROJECT:-test-project}
-      - NEW_GID=${NEW_UID:-1000}
       - NEW_UID=${NEW_UID:-1000}
+      - NEW_GID=${NEW_GID:-1000}
     volumes:
       - ./test-project:/shared/httpd/${FLASK_PROJECT:-test-project}
